@@ -295,6 +295,12 @@ namespace Steamworks
 			return SteamUtils.GetImage( imageid );
 		}
 
+		public static async Task<string> GetFriendPersonaName( SteamId steamid )
+		{
+			await CacheUserInformationAsync( steamid, true );
+			return Internal.GetFriendPersonaName( steamid );
+		}
+
 		/// <summary>
 		/// Find a rich presence value by key for current user. Will be null if not found.
 		/// </summary>

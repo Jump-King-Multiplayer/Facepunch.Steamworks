@@ -19,8 +19,6 @@ jobs:
         source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Setup msbuild
-      uses: microsoft/setup-msbuild@v1
     - name: Restore dependencies
       run: |
         dotnet restore .\Facepunch.Steamworks\Facepunch.Steamworks.Posix.csproj
@@ -29,8 +27,8 @@ jobs:
         dotnet restore .\Facepunch.Steamworks.Test\Facepunch.Steamworks.TestWin32.csproj
         dotnet restore .\Facepunch.Steamworks.Test\Facepunch.Steamworks.TestWin64.csproj
     - name: Build project
-      run: msbuild Facepunch.Steamworks/Facepunch.Steamworks.Win32.csproj /p:Configuration=Release
+      run: dotnet build Facepunch.Steamworks/Facepunch.Steamworks.Win32.csproj -c Release
     - name: Package project
-      run: dotnet pack Facepunch.Steamworks/Facepunch.Steamworks.Win32.csproj --no-build -c Release --include-source
+      run: dotnet pack Facepunch.Steamworks/Facepunch.Steamworks.Win32.csproj --no-build -c Release
     - name: Publish package
       run: dotnet nuget push Facepunch.Steamworks/bin/Release/JKMP.Facepunch.Steamworks.Win32.2.3.5.symbols.nupkg --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate

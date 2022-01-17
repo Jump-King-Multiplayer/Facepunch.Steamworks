@@ -129,18 +129,35 @@ namespace Steamworks
 		/// Connect, over ordinary UDP (IPv4 or IPv6)
 		/// 
 		/// To use this derive a class from <see cref="SocketManager"/> and override as much as you want.
+		///
+		/// If symmetric connect is true symmetric connect mode will be enabled.
 		/// 
 		/// </summary>
-		public static T CreateNormalSocket<T>( NetAddress address ) where T : SocketManager, new()
+		public static T CreateNormalSocket<T>( NetAddress address, bool symmetricConnect ) where T : SocketManager, new()
 		{
 			var t = new T();
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			t.Socket = Internal.CreateListenSocketIP( ref address, options.Length, options );
 			t.Initialize();
 
 			SetSocketManager( t.Socket.Id, t );
 			return t;
 		}
+		
+		/// <summary>
+		/// Creates a "server" socket that listens for clients to connect to by calling
+		/// Connect, over ordinary UDP (IPv4 or IPv6)
+		/// 
+		/// To use this derive a class from <see cref="SocketManager"/> and override as much as you want.
+		/// 
+		/// </summary>
+		public static T CreateNormalSocket<T>( NetAddress address ) where T : SocketManager, new() => CreateNormalSocket<T>( address, false );
 
 		/// <summary>
 		/// Creates a "server" socket that listens for clients to connect to by calling
@@ -149,11 +166,19 @@ namespace Steamworks
 		/// To use this you should pass a class that inherits <see cref="ISocketManager"/>. You can use
 		/// SocketManager to get connections and send messages, but the ISocketManager class
 		/// will received all the appropriate callbacks.
+		///
+		/// If symmetric connect is true symmetric connect mode will be enabled.
 		/// 
 		/// </summary>
-		public static SocketManager CreateNormalSocket( NetAddress address, ISocketManager intrface )
+		public static SocketManager CreateNormalSocket( NetAddress address, ISocketManager intrface, bool symmetricConnect )
 		{
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			var socket = Internal.CreateListenSocketIP( ref address, options.Length, options );
 
 			var t = new SocketManager
@@ -167,25 +192,52 @@ namespace Steamworks
 			SetSocketManager( t.Socket.Id, t );
 			return t;
 		}
+		
+		/// <summary>
+		/// Creates a "server" socket that listens for clients to connect to by calling
+		/// Connect, over ordinary UDP (IPv4 or IPv6).
+		/// 
+		/// To use this you should pass a class that inherits <see cref="ISocketManager"/>. You can use
+		/// SocketManager to get connections and send messages, but the ISocketManager class
+		/// will received all the appropriate callbacks.
+		///
+		/// </summary>
+		public static SocketManager CreateNormalSocket( NetAddress address, ISocketManager intrface ) => CreateNormalSocket( address, intrface, false );
 
 		/// <summary>
 		/// Connect to a socket created via <c>CreateListenSocketIP</c>.
 		/// </summary>
-		public static T ConnectNormal<T>( NetAddress address ) where T : ConnectionManager, new()
+		public static T ConnectNormal<T>( NetAddress address, bool symmetricConnect ) where T : ConnectionManager, new()
 		{
 			var t = new T();
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			t.Connection = Internal.ConnectByIPAddress( ref address, options.Length, options );
 			SetConnectionManager( t.Connection.Id, t );
 			return t;
 		}
 
+		public static T ConnectNormal<T>( NetAddress address ) where T : ConnectionManager, new() => ConnectNormal<T>( address, false );
+
 		/// <summary>
 		/// Connect to a socket created via <c>CreateListenSocketIP</c>.
+		///
+		/// If symmetric connect is true symmetric connect mode will be enabled.
 		/// </summary>
-		public static ConnectionManager ConnectNormal( NetAddress address, IConnectionManager iface )
+		public static ConnectionManager ConnectNormal( NetAddress address, IConnectionManager iface, bool symmetricConnect )
 		{
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			var connection = Internal.ConnectByIPAddress( ref address, options.Length, options );
 
 			var t = new ConnectionManager
@@ -197,17 +249,27 @@ namespace Steamworks
 			SetConnectionManager( t.Connection.Id, t );
 			return t;
 		}
+		
+		public static ConnectionManager ConnectNormal(NetAddress address, IConnectionManager iface) => ConnectNormal( address, iface, false );
 
 		/// <summary>
 		/// Creates a server that will be relayed via Valve's network (hiding the IP and improving ping).
 		/// 
 		/// To use this derive a class from <see cref="SocketManager"/> and override as much as you want.
+		///
+		/// If symmetric connect is true symmetric connect mode will be enabled.
 		/// 
 		/// </summary>
-		public static T CreateRelaySocket<T>( int virtualport = 0 ) where T : SocketManager, new()
+		public static T CreateRelaySocket<T>( int virtualport, bool symmetricConnect ) where T : SocketManager, new()
 		{
 			var t = new T();
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			t.Socket = Internal.CreateListenSocketP2P( virtualport, options.Length, options );
 			t.Initialize();
 			SetSocketManager( t.Socket.Id, t );
@@ -217,14 +279,38 @@ namespace Steamworks
 		/// <summary>
 		/// Creates a server that will be relayed via Valve's network (hiding the IP and improving ping).
 		/// 
+		/// To use this derive a class from <see cref="SocketManager"/> and override as much as you want.
+		///
+		/// </summary>
+		public static T CreateRelaySocket<T>() where T : SocketManager, new() => CreateRelaySocket<T>( 0, false );
+		
+		/// <summary>
+		/// Creates a server that will be relayed via Valve's network (hiding the IP and improving ping).
+		/// 
+		/// To use this derive a class from <see cref="SocketManager"/> and override as much as you want.
+		///
+		/// </summary>
+		public static T CreateRelaySocket<T>( int virtualport ) where T : SocketManager, new() => CreateRelaySocket<T>( virtualport, false );
+
+		/// <summary>
+		/// Creates a server that will be relayed via Valve's network (hiding the IP and improving ping).
+		/// 
 		/// To use this you should pass a class that inherits <see cref="ISocketManager"/>. You can use
 		/// <see cref="SocketManager"/> to get connections and send messages, but the <see cref="ISocketManager"/> class
 		/// will received all the appropriate callbacks.
+		///
+		/// If symmetric connect is true symmetric connect mode will be enabled.
 		/// 
 		/// </summary>
-		public static SocketManager CreateRelaySocket( int virtualport, ISocketManager intrface )
+		public static SocketManager CreateRelaySocket( int virtualport, ISocketManager intrface, bool symmetricConnect )
 		{
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			var socket = Internal.CreateListenSocketP2P( virtualport, options.Length, options );
 
 			var t = new SocketManager
@@ -238,15 +324,30 @@ namespace Steamworks
 			SetSocketManager( t.Socket.Id, t );
 			return t;
 		}
+		/// <summary>
+		/// Creates a server that will be relayed via Valve's network (hiding the IP and improving ping).
+		/// 
+		/// To use this you should pass a class that inherits <see cref="ISocketManager"/>. You can use
+		/// <see cref="SocketManager"/> to get connections and send messages, but the <see cref="ISocketManager"/> class
+		/// will received all the appropriate callbacks.
+		///
+		/// </summary>
+		public static SocketManager CreateRelaySocket( int virtualport, ISocketManager intrface ) => CreateRelaySocket( virtualport, intrface, false );
 
 		/// <summary>
 		/// Connect to a relay server.
 		/// </summary>
-		public static T ConnectRelay<T>( SteamId serverId, int virtualport = 0 ) where T : ConnectionManager, new()
+		public static T ConnectRelay<T>( SteamId serverId, int virtualport, bool symmetricConnect ) where T : ConnectionManager, new()
 		{
 			var t = new T();
 			NetIdentity identity = serverId;
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			t.Connection = Internal.ConnectP2P( ref identity, virtualport, options.Length, options );
 			SetConnectionManager( t.Connection.Id, t );
 			return t;
@@ -255,10 +356,32 @@ namespace Steamworks
 		/// <summary>
 		/// Connect to a relay server.
 		/// </summary>
-		public static ConnectionManager ConnectRelay( SteamId serverId, int virtualport, IConnectionManager iface )
+		public static T ConnectRelay<T>( SteamId serverId, int virtualport ) where T : ConnectionManager, new() => ConnectRelay<T>( serverId, virtualport, false );
+
+		/// <summary>
+		/// Connect to a relay server with virtual port set to 0.
+		///
+		/// If symmetric connect is true symmetric connect mode will be enabled.
+		/// 
+		/// </summary>
+		public static T ConnectRelay<T>( SteamId serverId, bool symmetricConnect ) where T : ConnectionManager, new() => ConnectRelay<T>( serverId, 0, symmetricConnect );
+
+		/// <summary>
+		/// Connect to a relay server.
+		/// 
+		/// If symmetric connect is true symmetric connect mode will be enabled.
+		/// 
+		/// </summary>
+		public static ConnectionManager ConnectRelay( SteamId serverId, int virtualport, IConnectionManager iface, bool symmetricConnect )
 		{
 			NetIdentity identity = serverId;
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			var connection = Internal.ConnectP2P( ref identity, virtualport, options.Length, options );
 
 			var t = new ConnectionManager
@@ -270,6 +393,8 @@ namespace Steamworks
 			SetConnectionManager( t.Connection.Id, t );
 			return t;
 		}
+
+		public static ConnectionManager ConnectRelay( SteamId serverId, int virtualport, IConnectionManager iface ) => ConnectRelay( serverId, virtualport, iface, false );
 
 		/// <summary>
 		/// Begin asynchronous process of allocating a fake IPv4 address that other
@@ -304,10 +429,16 @@ namespace Steamworks
 		/// To use this derive a class from <see cref="SocketManager"/> and override as much as you want.
 		/// 
 		/// </summary>
-		public static T CreateRelaySocketFakeIP<T>( int fakePortIndex = 0 ) where T : SocketManager, new()
+		public static T CreateRelaySocketFakeIP<T>( int fakePortIndex, bool symmetricConnect ) where T : SocketManager, new()
 		{
 			var t = new T();
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			t.Socket = Internal.CreateListenSocketP2PFakeIP( 0, options.Length, options );
 			t.Initialize();
 			SetSocketManager( t.Socket.Id, t );
@@ -317,14 +448,44 @@ namespace Steamworks
 		/// <summary>
 		/// Creates a server that will be relayed via Valve's network (hiding the IP and improving ping).
 		/// 
+		/// To use this derive a class from <see cref="SocketManager"/> and override as much as you want.
+		///
+		/// Virtual port is set to 0.
+		///
+		/// If symmetric connect is true symmetric connect mode will be enabled.
+		/// 
+		/// </summary>
+		public static T CreateRelaySocketFakeIP<T>( bool symmetricConnect ) where T : SocketManager, new() => CreateRelaySocketFakeIP<T>( 0, symmetricConnect );
+
+		/// <summary>
+		/// Creates a server that will be relayed via Valve's network (hiding the IP and improving ping).
+		/// 
+		/// To use this derive a class from <see cref="SocketManager"/> and override as much as you want.
+		///
+		/// </summary>
+		public static T CreateRelaySocketFakeIP<T>( int fakePortIndex ) where T : SocketManager, new() => CreateRelaySocketFakeIP<T>( fakePortIndex, false );
+
+		public static T CreateRelaySocketFakeIP<T>() where T : SocketManager, new() => CreateRelaySocketFakeIP<T>( 0, false );
+
+		/// <summary>
+		/// Creates a server that will be relayed via Valve's network (hiding the IP and improving ping).
+		/// 
 		/// To use this you should pass a class that inherits <see cref="ISocketManager"/>. You can use
 		/// <see cref="SocketManager"/> to get connections and send messages, but the <see cref="ISocketManager"/> class
 		/// will received all the appropriate callbacks.
+		///
+		/// If symmetric connect is true symmetric connect mode will be enabled.
 		/// 
 		/// </summary>
-		public static SocketManager CreateRelaySocketFakeIP( int fakePortIndex, ISocketManager intrface )
+		public static SocketManager CreateRelaySocketFakeIP( int fakePortIndex, ISocketManager intrface, bool symmetricConnect )
 		{
 			var options = Array.Empty<NetKeyValue>();
+
+			if ( symmetricConnect )
+			{
+				options = CreateSymmetricSettings();
+			}
+
 			var socket = Internal.CreateListenSocketP2PFakeIP( 0, options.Length, options );
 
 			var t = new SocketManager
@@ -337,6 +498,16 @@ namespace Steamworks
 
 			SetSocketManager( t.Socket.Id, t );
 			return t;
+		}
+
+		public static SocketManager CreateRelaySocketFakeIP( int fakePortIndex, ISocketManager intrface ) => CreateRelaySocketFakeIP( fakePortIndex, intrface, false );
+
+		private static NetKeyValue[] CreateSymmetricSettings()
+		{
+			var value = new NetKeyValue();
+			NetKeyValue.InternalSetInt32( ref value, NetConfig.SymmetricConnect, 1 );
+
+			return new[] { value };
 		}
 	}
 }

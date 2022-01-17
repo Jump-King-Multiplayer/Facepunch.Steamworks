@@ -31,4 +31,4 @@ jobs:
     - name: Package project
       run: dotnet pack Facepunch.Steamworks/Facepunch.Steamworks.Win32.csproj --no-build -c Release
     - name: Publish package
-      run: dotnet nuget push Facepunch.Steamworks/bin/Release/*.nupkg --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+      run: dotnet nuget push Facepunch.Steamworks/bin/Release/JKMP.Facepunch.Steamworks.Win32.*.nupkg --source https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate

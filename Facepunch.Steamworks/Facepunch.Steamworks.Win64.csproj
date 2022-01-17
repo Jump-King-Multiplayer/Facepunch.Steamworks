@@ -22,7 +22,6 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/Jump-King-Multiplayer/Facepunch.Steamworks.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn> <!-- Disable warnings about public types etc not having documentation -->
 	</PropertyGroup>

@@ -17,7 +17,7 @@
 		<PackageDescription>Steamworks implementation with an emphasis on making things easy. For Windows x86. Note: this is a modified fork used by JKMP.</PackageDescription>
 		<PackageProjectUrl>https://github.com/Jump-King-Multiplayer/Facepunch.Steamworks</PackageProjectUrl>
 		<PackageIcon>Facepunch.Steamworks.jpg</PackageIcon>
-		<PackageTags>facepunch;steam;unity;steamworks;valve</PackageTags>
+		<PackageTags></PackageTags>
 		<LangVersion>10</LangVersion>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/Jump-King-Multiplayer/Facepunch.Steamworks.git</RepositoryUrl>

@@ -15,12 +15,12 @@
 		<Authors>Garry Newman</Authors>
 		<PackageId>JKMP.Facepunch.Steamworks.Win32</PackageId>
 		<PackageDescription>Steamworks implementation with an emphasis on making things easy. For Windows x86. Note: this is a modified fork used by JKMP.</PackageDescription>
-		<PackageProjectUrl>https://github.com/Jump-King-Multiplayer/Facepunch.Steamworks</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/Jump-King-Modding-Platform/Facepunch.Steamworks</PackageProjectUrl>
 		<PackageIcon>Facepunch.Steamworks.jpg</PackageIcon>
 		<PackageTags></PackageTags>
 		<LangVersion>10</LangVersion>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryUrl>https://github.com/Jump-King-Multiplayer/Facepunch.Steamworks.git</RepositoryUrl>
+		<RepositoryUrl>https://github.com/Jump-King-Modding-Platform/Facepunch.Steamworks.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn> <!-- Disable warnings about public types etc not having documentation -->
